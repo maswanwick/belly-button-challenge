@@ -20,3 +20,44 @@ function loadTestSubjects(userList) {
 
     dropDownMenu.property('selectedIndex', -1);
 }
+
+// combobox change event handler
+function optionChanged(selectedID) {
+    // filter the json data for the selected subject ID and return the sample array
+    let selectedSample = (retrievedData.samples.filter(item => {
+        return item.id == selectedID;
+    }));
+
+    // pass the filtered data to the helper functions to display data
+    loadSubjectSampleGraph(selectedSample);
+}
+
+// create the bar chart for the sample data
+function loadSubjectSampleGraph(sample) {
+    var subjectValues = []
+
+    for (let i = 0; i < sample[0].otu_ids.length; i++) {
+        let subjectValue = {
+            label: 'OTU ' + sample[0].otu_ids[i],
+            value: sample[0].sample_values[i],
+            text: sample[0].otu_labels[i]
+        }
+
+        subjectValues.push(subjectValue)
+    };
+
+    let sortedSample = subjectValues.sort((a, b) => b.value - a.value);
+    let slicedSample = sortedSample.slice(0, 10);
+    let reverseSample = slicedSample.reverse();
+
+    let trace = {
+        x: reverseSample.map(object => object.value),
+        y: reverseSample.map(object => object.label),
+        text: reverseSample.map(object => object.text),
+        type: 'bar',
+        orientation: 'h'
+    };
+
+    Plotly.newPlot('bar', [trace])
+    
+}
