@@ -28,9 +28,15 @@ function optionChanged(selectedID) {
         return item.id == selectedID;
     }));
 
+    // filter the json data for the selected subject ID and return the metadata array
+    let selectedSubject = (retrievedData.metadata.filter(item => {
+        return item.id == selectedID;
+    }));
+
     // pass the filtered data to the helper functions to display data
     loadSubjectSampleGraph(selectedSample);
     loadSubjectBubbleChart(selectedSample);
+    loadSubjectDemographics(selectedSubject);
 }
 
 // create the bar chart for the sample data
@@ -101,4 +107,18 @@ function loadSubjectBubbleChart(sample) {
     };
 
     Plotly.newPlot('bubble', [trace], layout)
+}
+
+// set the selected subject's metadata values
+function loadSubjectDemographics(subject) {
+    let metadataDiv = d3.select('#sample-metadata')
+    metadataDiv.selectAll('h5').remove();
+
+    Object.keys(subject[0]).forEach(item => {
+        let label = item;
+        let value = subject[0][label]
+        
+        metadataDiv.append('h5').text(label + ': ' + value)
+    })
+    
 }
