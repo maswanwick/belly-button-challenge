@@ -30,6 +30,7 @@ function optionChanged(selectedID) {
 
     // pass the filtered data to the helper functions to display data
     loadSubjectSampleGraph(selectedSample);
+    loadSubjectBubbleChart(selectedSample);
 }
 
 // create the bar chart for the sample data
@@ -60,4 +61,44 @@ function loadSubjectSampleGraph(sample) {
 
     Plotly.newPlot('bar', [trace])
     
+}
+
+// create the bubble chart for the sample data
+function loadSubjectBubbleChart(sample) {
+    var subjectValues = []
+
+    for (let i = 0; i < sample[0].otu_ids.length; i++) {
+        let subjectValue = {
+            x: sample[0].otu_ids[i],
+            y: sample[0].sample_values[i],
+            marker_size: sample[0].sample_values[i],
+            color: sample[0].otu_ids[i],
+            text: sample[0].otu_labels[i]
+        }
+
+        subjectValues.push(subjectValue)
+    };
+
+    var trace = {
+        x: subjectValues.map(object => object.x),
+        y: subjectValues.map(object => object.y),
+        marker: {
+            size: subjectValues.map(object => object.marker_size),
+            color: subjectValues.map(object => object.color),
+            colorscale: 'Earth'
+        },
+        text: subjectValues.map(object => object.text),
+        mode: 'markers'
+    }
+
+    var layout = {
+        showlegend: false,
+        xaxis: {
+            title: {
+                text: 'OTU ID'
+            }
+        }
+    };
+
+    Plotly.newPlot('bubble', [trace], layout)
 }
