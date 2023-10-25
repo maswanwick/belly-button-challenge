@@ -37,6 +37,7 @@ function optionChanged(selectedID) {
     loadSubjectSampleGraph(selectedSample);
     loadSubjectBubbleChart(selectedSample);
     loadSubjectDemographics(selectedSubject);
+    loadGaugeChart(selectedSubject);
 }
 
 // create the bar chart for the sample data
